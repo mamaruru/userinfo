@@ -1,0 +1,92 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: User Info API
+  description: 社内向けユーザー情報取得API
+paths:
+  /internal/users/lookup:
+    post:
+      tags:
+      - User Info API
+      summary: メールアドレスからユーザー情報を取得
+      description: 指定されたメールアドレス一覧から、名前・生年月日・性別を外部API経由で取得します
+      operationId: lookupUsers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailRequest"
+        required: true
+      responses:
+        "200":
+          description: ユーザー情報取得成功
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserInfoResponse"
+        "500":
+          description: 外部APIエラーまたは処理失敗
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserInfoResponse"
+  /api/users/details:
+    post:
+      tags:
+      - stub-user-details-controller
+      operationId: getUserDetails
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserInfoResponse"
+components:
+  schemas:
+    EmailRequest:
+      type: object
+      properties:
+        emails:
+          type: array
+          description: ユーザーのメールアドレス一覧
+          example:
+          - alice@example.com
+          - bob@example.com
+          items:
+            type: string
+            description: ユーザーのメールアドレス一覧
+            example: "[\"alice@example.com\",\"bob@example.com\"]"
+    UserInfoResponse:
+      type: object
+      properties:
+        email:
+          type: string
+          example: alice@example.com
+        name:
+          type: string
+          example: Alice
+        birthDate:
+          type: string
+          format: date
+          example: 1990-01-01
+        gender:
+          type: string
+          example: FEMALE

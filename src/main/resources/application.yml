@@ -1,0 +1,5 @@
+external:
+  api:
+    base-url: http://localhost:8081
+    api-key: secret-api-key
+    api-token: 1234567
